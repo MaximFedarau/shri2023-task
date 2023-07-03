@@ -5,14 +5,91 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
     <title>Яндекс.Дом</title>
-    <link rel="preload" as="font" href="assets/lato.woff2" type="font/woff2" crossorigin="anonymous">
-    <script src="vendors/react-with-dom.js"></script>
-    <link rel="stylesheet" type="text/css" href="reset.css">
-    <link rel="stylesheet" type="text/css" href="styles.css">
+    <script src="vendors/react-with-dom.js" defer></script>
+    <link rel="stylesheet" type="text/css" href="reset.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" type="text/css" href="styles.css" media="print" onload="this.media='all'">
 </head>
 <body>
 
 <div id="app"></div>
+
+<style>
+    html {
+    font-size: 100%;
+    font-family: Arial, sans-serif;
+    line-height: 1.25;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    font-family: inherit;
+    line-height: inherit;
+    margin: 0;
+}
+
+html, body {
+    height: 100%;
+}
+    .footer {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    height: 4rem;
+    margin-top: auto;
+    padding: 0 2.5rem;
+}
+
+@media (max-width: 768px) {
+    .footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.9375rem;
+        height: auto;
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+    }
+}
+
+.footer__list {
+    display: flex;
+    align-items: baseline;
+    gap: 0.9375rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+@media (max-width: 768px) {
+    .footer__list {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+.footer__link {
+    font-size: .75rem;
+    color: #858585;
+    transition: opacity .15s ease-in-out;
+    text-decoration: none;
+}
+
+.footer__link:hover {
+    color: #000;
+}
+
+.footer__copyright {
+    margin-left: auto;
+    font-size: .75rem;
+    color: #858585;
+}
+
+@media (max-width: 768px) {
+    .footer__copyright {
+        margin-left: 0;
+    }
+}
+</style>
 
 <footer class="footer">
     <ul class="footer__list">
@@ -35,8 +112,7 @@
     </div>
 </footer>
 
-<script src="vendors/babel.min.js"></script>
-<script type="text/babel">
+<script type="text/babel" defer>
     function Header() {
         let [expanded, setExpanded] = React.useState(false);
         let [toggled, setToggled] = React.useState(false);
@@ -73,13 +149,11 @@
     function Event(props) {
         const ref = React.useRef();
 
-        const { onSize } = props;
-
         React.useEffect(() => {
             const width = ref.current.offsetWidth;
             const height = ref.current.offsetHeight;
-            if (onSize) {
-                onSize({ width, height });
+            if (props.onSize) {
+                props.onSize({ width, height });
             }
         });
 
@@ -202,9 +276,9 @@
         }
     };
     for (let i = 0; i < 6; ++i) {
-        TABS.all.items = [...TABS.all.items, ...TABS.all.items];
+        TABS.all.items = TABS.all.items.concat(TABS.all.items);
     }
-    const TABS_KEYS = Object.keys(TABS);
+    const TABS_KEYS = ['all', 'kitchen', 'hall', 'lights', 'cameras'];
 
     function Main() {
         const ref = React.useRef();
@@ -225,7 +299,7 @@
 
         let sizes = [];
         const onSize = size => {
-            sizes = [...sizes, size];
+            sizes = sizes.concat(size);
         };
 
         React.useEffect(() => {
@@ -393,16 +467,15 @@
         </main>;
     }
 
-    setTimeout(() => {
-        const root = ReactDOM.createRoot(document.getElementById('app'));
-        root.render(
-            <>
-                <Header />
-                <Main />
-            </>
-        );
-    }, 100);
+    const root = ReactDOM.createRoot(document.getElementById('app'));
+    root.render(
+        <>
+            <Header />
+            <Main />
+        </>
+    );
 </script>
 
+<script src="vendors/babel.min.js" defer></script>
 </body>
 </html>
